@@ -6,7 +6,7 @@ using namespace DirectX;
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() { delete model_;}
 
 void GameScene::Initialize() {
 
@@ -14,6 +14,26 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
+	textreHandle_ = TextureManager::Load("mario.jpg");
+	model_ = Model::Create();
+
+	// x,y,z 方向のスケーリングを設定
+	worldTransform_.scale_ = {5.0f, 5.0f, 5.0f};
+
+	//x,y,z 轴周りの回転角を設定
+	worldTransform_.rotation_ = {XM_PI / 4.0f, XM_PI / 4.0f, 0.0f};
+
+	//x,y,z 轴周りの回転角を設定
+	//worldTransform_.rotation_ = {0.0f, XMConvertToRadians(45.0f), 0.0f};
+
+	// x,y,z轴周りの平行移動を設定
+	worldTransform_.translation_ = {10.0f, 10.0f, 10.0f};	
+
+	//ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
+	//ビュープロジェクションの初期化
+	viewProjection_.Initialize();
+
 }
 
 void GameScene::Update() {}
@@ -44,6 +64,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	model_->Draw(worldTransform_, viewProjection_, textreHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
